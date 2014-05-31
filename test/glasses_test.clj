@@ -123,14 +123,12 @@
 
 (deftest extract-lens-test
   (testing "can extract a map of lenses"
-    (is (= (l/view {:a 1 :b 2} (l/extract {:a :b
-                                                       :b :a}))
+    (is (= (l/view {:a 1 :b 2} (l/extract {:a :b :b :a}))
            {:a 2 :b 1})))
 
   (testing "can modify a extracted value"
-    (is (= (l/update {:a 1 :b 2}  (l/extract {:a :b
-                                                          :b :a})
-                           assoc :a 3)
+    (is (= (l/update {:a 1 :b 2} (l/extract {:a :b :b :a})
+                     assoc :a 3)
            {:a 1 :b 3}))))
 
 (deftest flatten-lenses-test
@@ -158,7 +156,7 @@
 (deftest iso-lens-test
   (testing "can use two roundtrip functions to create a lens"
     (let [lens (l/iso-lens #(Integer/parseInt %)
-                                 #(.toString %))]
+                           #(.toString %))]
       (is (= (l/view "1" lens) 1))
       (is (= (l/update "1" lens inc) "2")))))
 
