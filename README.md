@@ -1,9 +1,11 @@
+<img src="http://megakorre.github.io/glasses/resources/deal_with_it.jpg"
+ alt="My little pony" title="lenses -> spectrum -> rainbow -> My little pony" align="right" />
+
 # glasses
 
 ![travis build status](https://travis-ci.org/megakorre/glasses.svg?branch=master)
 
 [api documentation](http://megakorre.github.io/glasses/doc/glasses.html)
-
 # using leiningen #
 
 ```clojure
@@ -19,7 +21,6 @@
   <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
-
 
 ## License
 
