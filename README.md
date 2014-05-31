@@ -1,5 +1,5 @@
 <img src="http://megakorre.github.io/glasses/resources/deal_with_it.png"
- style="width: 180px;"
+ width="150px"
  alt="My little pony" title="lenses -> spectrum -> rainbow -> My little pony" align="right" />
 
 # glasses
