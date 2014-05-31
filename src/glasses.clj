@@ -155,12 +155,36 @@
      (let [field (view-keys root lens-map)]
        [field (partial extract-root-f lens-map root field)]))))
 
+(defn flatten-lenses
+  "[lens[a,b]..] -> lens[a, [b]]"
+  [lenses]
+  (lens
+   (fn [root]
+     (let [fields (for [lens lenses] (view root lens))]
+       [fields
+        (fn [f]
+          (let [new-fields (f fields)]
+            (assert (= (count new-fields) (count lenses)))
+            (reduce
+             (fn [acu [new-value old-value lens]]
+               (if (identical? new-value old-value)
+                 acu
+                 (write acu lens new-value)))
+             root
+             (map vector new-fields fields lenses))))]))))
+
 (defn find-lens
   "(a -> lens[a,b]) -> lens[a,b]"
   [f]
   (lens
    (fn [root]
      (invoke-lens (f root) root))))
+
+(def mapped-vals
+  (find-lens
+   (fn [hash-map]
+     (comp-lens (flatten-lenses (map assoc-lens (keys hash-map)))
+                mapped))))
 
 (defn getter-setter-lens
   "(a -> b) -> (a -> b -> a) -> lens[a,b]"
