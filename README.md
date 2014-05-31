@@ -4,6 +4,23 @@
 
 [api documentation](http://megakorre.github.io/glasses/doc/glasses.html)
 
+# using leiningen #
+
+```clojure
+[glasses "0.1.0-SNAPSHOT"]
+```
+
+# using maven #
+
+```xml
+<dependency>
+  <groupId>glasses</groupId>
+  <artifactId>glasses</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+
 ## License
 
 Copyright © 2014 FIXME
