@@ -1,4 +1,4 @@
-<img src="http://megakorre.github.io/glasses/resources/deal_with_it.jpg"
+<img src="http://megakorre.github.io/glasses/resources/deal_with_it.png"
  alt="My little pony" title="lenses -> spectrum -> rainbow -> My little pony" align="right" />
 
 # glasses
