@@ -1,10 +1,6 @@
 # glasses
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
+![travis build status](https://travis-ci.org/megakorre/glasses.svg?branch=master)
 
 ## License
 
