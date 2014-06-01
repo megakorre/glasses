@@ -10,7 +10,7 @@
    :last-name "funke"
    :email "tobias.funke@gmail.com"})
 
-;; this is the raw way to define a lense
+;; this is the raw way to define a lens
 ;; you call lens/lens and give it a function
 ;; that takes a root value in this case a user
 ;; and returns a pair where the first value
@@ -49,7 +49,7 @@
 ;;     :email "tobias.funke@gmail.com"}
 
 ;; you can also define lenses using lens/getter-setter-lens
-;; wich makes a lens from a getter and a setter function
+;; which makes a lens from a getter and a setter function
 
 (def first-name2
   (lens/getter-setter-lens
@@ -60,7 +60,7 @@
 (= (lens/write user first-name  "Newname")
    (lens/write user first-name2 "Newname"))
 
-;; since using keywords to reference fields in maps is so commen
+;; since using keywords to reference fields in maps is so common
 ;; you can use them directly as lenses
 
 (= (lens/write user first-name  "Newname")
@@ -74,15 +74,15 @@
 ;; ========================================================
 ;; composition
 
-;; a critical feture of lenses are that they compose
+;; a critical future of lenses are that they compose
 ;; you can do this with the lens/comp-lenses
-;; this function takse a seq of lenses and combines them
+;; this function takes a seq of lenses and combines them
 
 (def user2
   {:first-name "tobias"
    :last-name "funke"
    :address {:city "bluethwill"
-             :address_line "sudden valy street 23"
+             :address_line "sudden vale street 23"
              :postcode "56321"}})
 
 (def user-city (lens/comp-lenses [:address :city]))
@@ -95,8 +95,8 @@
 (= (lens/view user2 [:address :postcode])
    "56321")
 
-;; so basicly you can use lenses just like you use
-;; the clojure *-in funcitons
+;; so basically you can use lenses just like you use
+;; the clojure *-in functions
 
 (= (get-in user2 [:address :city])
    (lens/view user2 [:address :city]))
@@ -113,12 +113,12 @@
 (def str->num (lens/iso-lens #(Integer/parseInt %) str))
 
 ;; iso-lens takes 2 functions one to convert it to a integer in this case
-;; and anather one to convert it back to a string
+;; and another one to convert it back to a string
 
 (lens/update user2 [:address :postcode str->num] inc)
 ;; {:last-name "funke",
 ;;  :first-name "tobias",
-;;  :address {:address_line "sudden valy street 23",
+;;  :address {:address_line "sudden vale street 23",
 ;;            :postcode "56322",
 ;;            :city "bluethwill"}}
 
@@ -128,7 +128,7 @@
 ;; extract
 
 ;; extract is a function that lets you transform a structure
-;; to a map of a diferent shape and later write back changes
+;; to a map of a different shape and later write back changes
 ;; that are done to the new map
 
 (def user-view
@@ -138,19 +138,19 @@
    :address_city [:address :city]})
 
 (= (lens/view user2 user-view)
-   {:address_line "sudden valy street 23",
+   {:address_line "sudden vale street 23",
     :last-name "funke",
     :first-name "tobias",
     :address_city "bluethwill"})
 
 (defn take-ower-town
-  "clame the town as you own"
+  "claim the town as you own"
   [user] ;; user in the user-view shape
   (assoc user :address_city (:first-name user)))
 
 (= (lens/update user2 user-view take-ower-town)
    {:last-name "funke", :first-name "tobias",
-    :address {:address_line "sudden valy street 23",
+    :address {:address_line "sudden vale street 23",
               :postcode "56321",
               :city "tobias"}})
 
@@ -378,7 +378,7 @@
 
 ;; first task! something simple
 ;; Lets change the name of all the authors to tobias funke in this xml document.
-;; This culd be accomplished by diggin down to the right elements and updating them
+;; This could be accomplished by digging down to the right elements and updating them
 ;; appropriately... but a lazier way would be to just walk all of the tree
 ;; and replace the contents of the elements with the author tag
 
@@ -387,18 +387,18 @@
 ;; and gives you a traversal of all nodes in the tree
 ;; EXAMPLE:
 
-;; sinse nodes in the
+;; since nodes in the
 
 (def xml-nodes (tree/pre-tree
                 [:content
-                 (travers/filtered map?) ; we dont want to list the strings
+                 (travers/filtered map?) ; we don't want to list the strings
                                          ; in the tree as nodes
                                          ; so we filter them here
                  ]))
 
 ;; xml nodes here is a lens/traversal that lets you view and modify
-;; nodes of the tree in a pre-walk fassion.
-;; (there is also a post-tree that lets you do it in a post-walk fassion)
+;; nodes of the tree in a pre-walk fashion.
+;; (there is also a post-tree that lets you do it in a post-walk fashion)
 
 ;; ok so lets shrink the nodes we are working with to only the nodes
 ;; with the tag author
