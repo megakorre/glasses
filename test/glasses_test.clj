@@ -4,7 +4,6 @@
             [clojure.test :refer :all]))
 
 (deftest id-lens-test
-
   (testing "returns the item itself when viewed"
     (is (= (l/view :value l/id)
            :value)))

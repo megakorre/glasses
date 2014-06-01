@@ -66,6 +66,12 @@
    (fn [root]
      [root (fn [f] (f root))])))
 
+(def ignore
+  "lens[a, _]"
+  (traversal
+   (fn [root]
+     [[] (fn [_] root)])))
+
 (defn- mod-val
   [map key f]
   (let [old-field (get map key)

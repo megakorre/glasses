@@ -54,7 +54,15 @@
 
       {:a []}              inc {:a []}
       {:a [{:b 1}]}        inc {:a [{:b 2}]}
-      {:a [{:b 1} {:b 2}]} inc {:a [{:b 2} {:b 3}]})))
+      {:a [{:b 1} {:b 2}]} inc {:a [{:b 2} {:b 3}]})
+
+    (are [input f output]
+      (= output (l/update input [:a t/mapped :b t/mapped :c] f))
+
+      {:a []}                     inc {:a []}
+      {:a [{:b []}]}              inc {:a [{:b []}]}
+      {:a [{:b [{:c 1}]}]}        inc {:a [{:b [{:c 2}]}]}
+      {:a [{:b [{:c 1} {:c 2}]}]} inc {:a [{:b [{:c 2} {:c 3}]}]})))
 
 (deftest filtered-test
   (testing "can view a subset of a list"
@@ -69,3 +77,22 @@
   (testing "given a map it can update all its vals"
     (is (= (l/update {:a 1 :b 2} t/mapped-vals inc)
            {:a 2 :b 3}))))
+
+(deftest concat-tests
+  (is (= (l/update 1 (t/concat [l/id l/id]) inc) 3))
+
+  (is (= (l/view [1 2 3 4] (t/concat [(t/filtered odd?)
+                                      (t/filtered even?)]))
+         [1 3 2 4]))
+
+  (is (= (l/update [1 2 3 4] (t/concat [(t/filtered odd?)
+                                        (t/filtered even?)])
+                   identity)
+         [1 2 3 4])))
+
+(deftest shrink-test
+  (is (= (l/view [1 2 3 4] [t/mapped (t/shrink odd?)])
+         [1 3]))
+
+  (is (= (l/update [1 2 3 4] [t/mapped (t/shrink odd?)] inc)
+         [2 2 4 4])))
