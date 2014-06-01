@@ -9,7 +9,7 @@
 
 [api documentation](http://megakorre.github.io/glasses/doc/glasses.html)
 
-[tutorial](https://github.com/megakorre/glasses/blob/master/examples/tuturial.clj)
+[tutorial](https://github.com/megakorre/glasses/blob/master/examples/tutorial.clj)
 
 ![travis build status](https://travis-ci.org/megakorre/glasses.svg?branch=master)
 
