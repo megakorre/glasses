@@ -22,10 +22,9 @@
 
 (defn post-replace-tree
   [traversal f node]
-  (f
-   (lens/update
-    traversal
-    (partial pre-replace-tree traversal f))))
+  (f (lens/update
+      traversal
+      (partial post-replace-tree traversal f))))
 
 (defn post-tree [traversal]
   (lens/traversal

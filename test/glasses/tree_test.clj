@@ -24,9 +24,10 @@
 (defn shrink-tag [tag-name]
   (travers/shrink (fn [{t :tag}] (= t tag-name))))
 
-(def xml-nodes (tree/pre-tree [:content travers/mapped]))
-(def books [xml-nodes (shrink-tag :book)])
-(def book-title [:attrs :title])
+(def xml-nodes   (tree/pre-tree [:content travers/mapped]))
+
+(def books       [xml-nodes (shrink-tag :book)])
+(def book-title  [:attrs :title])
 (def book-author [:content travers/mapped (shrink-tag :author)])
 
 (deftest pre-tree-test
