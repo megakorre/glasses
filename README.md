@@ -2,7 +2,7 @@
 
 <img src="http://megakorre.github.io/glasses/resources/deal_with_it.png"
  alt="Leiningen logo" title="The man himself" height="100px" align="right" />
- 
+
 -------------------------
 
 > a lens libary for clojure
@@ -10,6 +10,8 @@
 [api documentation](http://megakorre.github.io/glasses/doc/glasses.html)
 
 ![travis build status](https://travis-ci.org/megakorre/glasses.svg?branch=master)
+
+[tuturial](https://github.com/megakorre/glasses/blob/master/examples/tuturial.clj)
 
 # using leiningen #
 
