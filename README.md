@@ -1,6 +1,7 @@
 # glasses
 
 <img src="http://megakorre.github.io/glasses/resources/deal_with_it.png" width="150px" alt="My little pony" title="lenses -> spectrum -> rainbow -> My little pony" align="right" />
+<br />
 
 > a lens libary for clojure
 
