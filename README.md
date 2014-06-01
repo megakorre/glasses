@@ -4,9 +4,10 @@
  width="150px"
  alt="My little pony" title="lenses -> spectrum -> rainbow -> My little pony" align="right" />
 
+[api documentation](http://megakorre.github.io/glasses/doc/glasses.html)
+
 ![travis build status](https://travis-ci.org/megakorre/glasses.svg?branch=master)
 
-[api documentation](http://megakorre.github.io/glasses/doc/glasses.html)
 # using leiningen #
 
 ```clojure
