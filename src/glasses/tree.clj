@@ -3,11 +3,11 @@
             [glasses.traversals :as travers]
             [clojure.walk       :as walk]))
 
-(defn view-tree [traversal node]
+(defn- view-tree [traversal node]
   (cons node (mapcat (partial view-tree traversal)
                      (lens/view node traversal))))
 
-(defn pre-replace-tree
+(defn- pre-replace-tree
   [traversal f node]
   (lens/update
    (f node)
@@ -20,7 +20,7 @@
      [(view-tree traversal node)
       (fn [f] (pre-replace-tree traversal f node))])))
 
-(defn post-replace-tree
+(defn- post-replace-tree
   [traversal f node]
   (f (lens/update
       traversal
