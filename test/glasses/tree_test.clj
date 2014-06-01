@@ -21,23 +21,25 @@
              </book>
             </books>"))
 
+(defn shrink-tag [tag-name]
+  (travers/shrink (fn [{t :tag}] (= t tag-name))))
+
+(def xml-nodes (tree/pre-tree [:content travers/mapped]))
+(def books [xml-nodes (shrink-tag :book)])
+(def book-title [:attrs :title])
+(def book-author [:content travers/mapped (shrink-tag :author)])
+
 (deftest pre-tree-test
-  (let [xml-nodes (tree/pre-tree [:content travers/mapped])]
+  (is (= (lens/view data [xml-nodes :tag])
+         [:books :book :author :book :author]))
 
-    (is (= (lens/view data [xml-nodes :tag])
-           [:books :book :author :book :author]))
+  (is (= (lens/view data [books {:title book-title
+                                 :authors [book-author :attrs :name]}])
+         [{:title "my little pony" :authors ["john"]}
+          {:title "the big star"   :authors ["lars"]}]))
 
-    (let [books [xml-nodes (travers/shrink (fn [{t :tag}] (= t :book)))]
-          title [:attrs :title]
-          author [:content travers/mapped (travers/shrink (fn [{t :tag}] (= t :author)))]]
+  (is (= (-> data
+             (lens/update [books book-title] string/capitalize)
+             (lens/view   [books book-title]))
 
-      (is (= (lens/view data [books {:title title
-                                     :authors [author :attrs :name]}])
-             [{:title "my little pony" :authors ["john"]}
-              {:title "the big star"   :authors ["lars"]}]))
-
-      (is (= (-> data
-                 (lens/update [books title] string/capitalize)
-                 (lens/view   [books title]))
-
-             ["My little pony" "The big star"])))))
+         ["My little pony" "The big star"])))
