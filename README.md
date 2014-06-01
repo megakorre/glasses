@@ -9,9 +9,9 @@
 
 [api documentation](http://megakorre.github.io/glasses/doc/glasses.html)
 
-![travis build status](https://travis-ci.org/megakorre/glasses.svg?branch=master)
-
 [tuturial](https://github.com/megakorre/glasses/blob/master/examples/tuturial.clj)
+
+![travis build status](https://travis-ci.org/megakorre/glasses.svg?branch=master)
 
 # using leiningen #
 
