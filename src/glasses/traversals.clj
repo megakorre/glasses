@@ -15,7 +15,7 @@
     (lens/traversal
      (fn [item]
        [[item] (fn [f] (lens/update item lens f))])
-     (fn [] "traversal[" (str lens) "]"))))
+     (fn [] (str "traversal[" (str lens) "]")))))
 
 (def mapped
   "a traversal over a seq of items
