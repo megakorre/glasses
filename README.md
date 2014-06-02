@@ -16,7 +16,7 @@
 # using leiningen #
 
 ```clojure
-[glasses "0.1.0-SNAPSHOT"]
+[glasses "0.2.0-SNAPSHOT"]
 ```
 
 # using maven #
@@ -25,7 +25,7 @@
 <dependency>
   <groupId>glasses</groupId>
   <artifactId>glasses</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
 </dependency>
 ```
 

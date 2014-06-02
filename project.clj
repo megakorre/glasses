@@ -1,4 +1,4 @@
-(defproject glasses "0.1.0-SNAPSHOT"
+(defproject glasses "0.2.0-SNAPSHOT"
   :description "a lens library for clojure"
   :url "http://github.com/megakorre/glasses"
   :license {:name "Eclipse Public License"
