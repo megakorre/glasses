@@ -1,5 +1,5 @@
 (ns glasses
-  (:require [glasses.protocols :refer [comp-lens invoke-lens traversal? Lensable Lens]]))
+  (:require [glasses.protocols :refer [comp-lens invoke-lens traversal?] :as proto]))
 
 (declare lens traversal view update)
 
@@ -10,7 +10,8 @@
      (let [[field-top    top-f]    (invoke-lens lens-top    root)
            [field-bottom bottom-f] (invoke-lens lens-bottom field-top)]
        [field-bottom
-        (fn [f] (top-f (fn [_] (bottom-f f))))]))))
+        (fn [f] (top-f (fn [_] (bottom-f f))))]))
+   (fn [] (str lens-top " " lens-bottom))))
 
 (defn- comp-traversal-impl
   [lens-top lens-bottom]
@@ -21,27 +22,36 @@
          (fn [field] (view field lens-bottom))
          collection)
         (fn [f]
-          (top-f (fn [field] (update field lens-bottom f))))]))))
+          (top-f (fn [field] (update field lens-bottom f))))]))
+   (fn [] (str lens-top " " lens-bottom))))
 
-(defn lens [f]
-  (reify
-    Lensable
-    (->lens [lens] lens)
-    Lens
-    (traversal? [_] false)
-    (invoke-lens* [_ root] (f root))
-    (comp-lens* [lens-top lens-bottom]
-      (comp-lens-impl lens-top lens-bottom))))
+(deftype Lens [f lens-name-f]
+  Object
+  (toString [this] (if lens-name-f (lens-name-f) ""))
+  proto/Lensable
+  (->lens [lens] lens)
+  proto/Lens
+  (traversal? [_] false)
+  (invoke-lens* [_ root] (f root))
+  (comp-lens* [lens-top lens-bottom]
+    (comp-lens-impl lens-top lens-bottom)))
 
-(defn traversal [f]
-  (reify
-    Lensable
-    (->lens [traversal] traversal)
-    Lens
-    (traversal? [_] true)
-    (invoke-lens* [_ root] (f root))
-    (comp-lens* [lens-top lens-bottom]
-      (comp-traversal-impl lens-top lens-bottom))))
+(defn lens [f & [lens-name-f]]
+  (Lens. f lens-name-f))
+
+(deftype Traversals [f lens-name-f]
+  Object
+  (toString [this] (if lens-name-f (lens-name-f) ""))
+  proto/Lensable
+  (->lens [traversal] traversal)
+  proto/Lens
+  (traversal? [_] true)
+  (invoke-lens* [_ root] (f root))
+  (comp-lens* [lens-top lens-bottom]
+    (comp-traversal-impl lens-top lens-bottom)))
+
+(defn traversal [f & [lens-name-f]]
+  (Traversals. f lens-name-f))
 
 (defn view
   "a -> lens[a,b] -> b"
@@ -64,13 +74,15 @@
   "lens[a, a]"
   (lens
    (fn [root]
-     [root (fn [f] (f root))])))
+     [root (fn [f] (f root))])
+   (fn [] "id")))
 
 (def ignore
   "lens[a, _]"
   (traversal
    (fn [root]
-     [[] (fn [_] root)])))
+     [[] (fn [_] root)])
+   (fn [] "ignore")))
 
 (defn- mod-val
   [map key f]
@@ -85,7 +97,8 @@
   [key]
   (lens
    (fn [root]
-     [(get root key) (fn [f] (mod-val root key f))])))
+     [(get root key) (fn [f] (mod-val root key f))])
+   (fn [] (str "assoc[" key "]"))))
 
 (defn comp-lenses
   "[lens[a,b?]...] -> lens[a,b]"
@@ -118,7 +131,8 @@
   (lens
    (fn [root]
      (let [field (view-keys root lens-map)]
-       [field (partial extract-root-f lens-map root field)]))))
+       [field (partial extract-root-f lens-map root field)]))
+   (fn [] (str lens-map))))
 
 (defn flatten-lenses
   "[lens[a,b]..] -> lens[a, [b]]"
@@ -136,29 +150,32 @@
                  acu
                  (write acu lens new-value)))
              root
-             (map vector new-fields fields lenses))))]))))
+             (map vector new-fields fields lenses))))]))
+   (fn [] (str lenses))))
 
 (defn find-lens
   "(a -> lens[a,b]) -> lens[a,b]"
-  [f]
+  [f & [lens-name]]
   (lens
    (fn [root]
-     (invoke-lens (f root) root))))
+     (invoke-lens (f root) root))
+   (fn [] (or lens-name "find-lens"))))
 
 (defn getter-setter-lens
   "(a -> b) -> (a -> b -> a) -> lens[a,b]"
-  [getter setter]
+  [getter setter & [lens-name]]
   (lens
    (fn [root]
      (let [field (getter root)]
-       [field (fn [f] (setter root (f field)))]))))
+       [field (fn [f] (setter root (f field)))]))
+   (fn [] (or lens-name "getter-setter"))))
 
 (defn iso-lens
   "(a -> b) -> (b -> a) -> lens[a,b]"
   [a->b b->a]
-  (getter-setter-lens a->b (fn [_ b] (b->a b))))
+  (getter-setter-lens a->b (fn [_ b] (b->a b)) "iso-lens"))
 
-(extend-protocol Lensable
+(extend-protocol proto/Lensable
   clojure.lang.Keyword
   (->lens [keyword] (assoc-lens keyword))
   clojure.lang.PersistentVector

@@ -9,7 +9,8 @@
   "traversal[a,b]"
   (traversal
    (fn [root]
-     [root (fn [f] (map f root))])))
+     [root (fn [f] (map f root))])
+   (fn [] "mapped")))
 
 (defn- pred-map [pred? f collection]
   (for [item collection]
@@ -21,13 +22,15 @@
   (traversal
    (fn [root]
      [(filter pred? root)
-      (fn [f] (pred-map pred? f root))])))
+      (fn [f] (pred-map pred? f root))])
+   (fn [] "filtered")))
 
 (def mapped-vals
   (find-lens
    (fn [hash-map]
      (comp-lenses [(flatten-lenses (map assoc-lens (keys hash-map)))
-                   mapped]))))
+                   mapped]))
+   (fn [] "mapped-vals")))
 
 (defn concat* [lens-a lens-b]
   (traversal
@@ -42,7 +45,8 @@
       (fn [f]
         (-> root
             (update lens-a f)
-            (update lens-b f)))])))
+            (update lens-b f)))])
+   (fn [] (str "concat[" (str lens-a) " " (str lens-b) "]"))))
 
 (defn concat [lenses]
   (reduce concat* ignore lenses))
@@ -53,4 +57,5 @@
      (let [match? (pred item)]
        [(if match? [item] [])
         (fn [f]
-          (if match? (f item) item))]))))
+          (if match? (f item) item))]))
+   (fn [] "shrink")))
