@@ -2,24 +2,33 @@
 
 (defprotocol Lensable
   (->lens [lens]
-    "returns something that implements
-     the Lens protocol"))
+    "returns something that implements the Lens protocol"))
 
 (defprotocol Lens
   (invoke-lens* [lens root]
-    "invoke the lens on some root")
+    "invoke the lens on some root
+     and returns a pair where the first item
+     is the field that the lens points to.
+     And the second item is a function that given a function
+     of the field returns a new root with the updated field included in it")
   (comp-lens* [lens-top lens-bottom]
-    "compose 2 lenses")
+    "compose 2 lenses `lens-to` and `lens-bottom` and returns a new lens.
+     That takes the root of the first lens and operates on the field of the second
+     lens
+
+     Lens[a,b] -> Lens[b, c] -> Lens[a, c]")
   (traversal? [lens]
-    "returns wheter or not the lens is a traversal"))
+    "returns true if the lens is a traversal"))
 
 (defn invoke-lens
-  "lens[a,b] -> a -> [b, ((b -> c) -> a)]"
+  "takes a Lensable and calls invoke-lens* on it after
+   coercing it to a lens"
   [lens root]
   (invoke-lens* (->lens lens) root))
 
 (defn comp-lens
-  "lens[a,b] -> lens[b,c] -> lens[a,c]"
+  "takes 2 Lensables and cals comp-lens* on them
+   after coercing them to lenses"
   [lens-top lens-bottom]
   (comp-lens* (->lens lens-top)
               (->lens lens-bottom)))

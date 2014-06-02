@@ -14,7 +14,18 @@
    traversal
    (partial pre-replace-tree traversal f)))
 
-(defn pre-tree [traversal]
+(defn pre-tree
+  "given a traversal from a node to its items of nodes
+   pre-tree returns a traversal of all nodes in the tree
+   where updates to the tree are done before diggin down the tree
+
+   Examples:
+
+   (= (lens/update {:v 1, :n [{:v 2}, {:v 3}]}
+       [(pre-tree [:n travers/mapped]) :v]
+       inc)
+      {:v 2, :n [{:v 3, :n []} {:v 4, :n []}]})"
+  [traversal]
   (lens/traversal
    (fn [node]
      [(view-tree traversal node)
@@ -23,10 +34,22 @@
 (defn- post-replace-tree
   [traversal f node]
   (f (lens/update
+      node
       traversal
       (partial post-replace-tree traversal f))))
 
-(defn post-tree [traversal]
+(defn post-tree
+  "given a traversal from a node to its items of nodes
+   pre-tree returns a traversal of all nodes in the tree
+   where updates to the tree are done after diggin down the tree
+
+   Examples:
+
+   (= (lens/update {:v 1, :n [{:v 2}, {:v 3}]}
+       [(post-tree [:n travers/mapped]) :v]
+       inc)
+      {:v 2, :n [{:v 3, :n []} {:v 4, :n []}]})"
+  [traversal]
   (lens/traversal
    (fn [node]
      [(view-tree traversal node)
